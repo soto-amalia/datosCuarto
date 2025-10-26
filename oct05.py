@@ -43,3 +43,10 @@ print(dist)
 
 distancia2 = punto2.distancia(punto1)
 print(distancia2)
+
+"""En este momento: punto1 = (5, 6) y punto2 = (0, 0).
+
+dx = 5 - 0 = 5, dy = 6 - 0 = 6, distancia = √(5² + 6²) = √61 ≈ 7.8102496759.
+
+La distancia es simétrica: punto1.distancia(punto2) y punto2.distancia(punto1)
+ dan el mismo valor, por eso imprime el mismo número dos veces."""
