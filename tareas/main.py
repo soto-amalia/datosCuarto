@@ -25,20 +25,13 @@ if __name__ == "__main__":
 
 def prueba():
 
-    evaluacion26 = Evaluador()  # voy a crear una instancia para hoy
-
-    # Registrar tarea solo estadistica
+    evaluacion26 = Evaluador() 
     id_estadistica = evaluacion26.registrar(Estadistica)
     print("ID de tarea registrada:",  id_estadistica)
-
     alumno = "Amalia"
-
     evaluacion26.iniciar_tarea(alumno,  id_estadistica)
     print("\nLección Estadistica:")
     print(evaluacion26.obtener_leccion(alumno))
-
-    # Pedir código al usuario en lugar de hardcodearlo
-    print("\nIntroduce tu código para la tarea de Estadistica (termina con línea vacía):")
     codigo_estudiante = ""
     while True:
         linea = input()
