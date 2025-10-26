@@ -1,52 +1,54 @@
-"""""
-CASO DE ESTUDIO
-Vamos a crear un sistema de calificaciones automatizado para tareas o lecciones programaticas.
-
---Debe contar con una interfaz que permita que los tutores implementen sus tareas 
-y que reporte errores en casos
-donde la tarea no cumpla con las condiciones especificadas.
---Los tutores pueden crear sus tareas y deben crear el dódigo para verificar el trabajo 
-de los "alumnos".
---EL tutor debe de poder identificar al alumno(e.g por nombre).
---El tutor debe de tener conocimiento sobre que tareas esta realizando cada alumno 
---EL alumno puede realizar cualquier numero de intentos antes de resolver la tarea y 
-se debe tener registro del numero de intentos realizados.
-
-"""
-
 # main.py
-# python -m mi_tutor.main
-from .leccion import IntroPython, Estadistica
+# python -m tareas.main
+from .leccion import IntroPython, Estadistica, Algebra
 from .tutor import Tarea, Evaluador
 
 if __name__ == "__main__":
     print(issubclass(IntroPython, Tarea))
     print(issubclass(Estadistica, Tarea))
+    print(issubclass(Algebra, Tarea))
 
 def prueba():
 
-    evaluacion26 = Evaluador() 
-    id_estadistica = evaluacion26.registrar(Estadistica)
-    print("ID de tarea registrada:",  id_estadistica)
+    evaluacion = Evaluador() 
+
     alumno = "Amalia"
-    evaluacion26.iniciar_tarea(alumno,  id_estadistica)
-    print("\nLección Estadistica:")
-    print(evaluacion26.obtener_leccion(alumno))
-    codigo_estudiante = ""
-    while True:
-        linea = input()
-        if linea.strip() == "":
-            break
-        codigo_estudiante += linea + "\n"
 
-    # Chequear código del alumno
-    resultado = evaluacion26.check(alumno, codigo_estudiante)
-    print("Check Estadistica:", resultado)
+    # Registrar tareas
+    id_intro = evaluacion.registrar(IntroPython)
+    id_estadistica = evaluacion.registrar(Estadistica)
+    id_algebra = evaluacion.registrar(Algebra)
 
-    # Resumen final
-    print("Resumen final:", evaluacion26.resumen(alumno))
+    print("ID tarea IntroPython:", id_intro)
+    print("ID tarea Estadistica:", id_estadistica)
+    print("ID tarea Algebra:", id_algebra)
 
+    # Lista de todas las tareas a evaluar
+    tareas = [
+        (id_intro, "IntroPython"),
+        (id_estadistica, "Estadistica"),
+        (id_algebra, "Algebra")
+    ]
+
+    for tarea_id, nombre in tareas:
+        print(f"\n--- Lección {nombre} ---")
+        evaluacion.iniciar_tarea(alumno, tarea_id)
+        print(evaluacion.obtener_leccion(alumno))
+
+        # Leer código del alumno
+        codigo_estudiante = ""
+        while True:
+            linea = input("Ingresa tu código (Enter vacío para terminar): ")
+            if linea.strip() == "":
+                break
+            codigo_estudiante += linea + "\n"
+
+        # Chequear código
+        resultado = evaluacion.check(alumno, codigo_estudiante)
+        print(f"Check {nombre}:", resultado)
+
+    # Resumen final de la última tarea (por ahora)
+    print("\nResumen final:", evaluacion.resumen(alumno))
 
 if __name__ == "__main__":
     prueba()
-

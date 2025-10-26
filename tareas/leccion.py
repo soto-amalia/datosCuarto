@@ -10,13 +10,17 @@ from .tutor import Tarea
         return f"Hola {self.alumno}, define las siguientes 2 variables llamadas a y b, 1. un entero igual a 1 y 2. un string con la palabra 'hola'"
 
     def check(self, codigo):
-        return codigo == "a=1\nb='hola'"
+        return codigo == "a=1 \n b='hola'"
 """
-class IntroPython:
+class IntroPython(Tarea):
     def leccion(self):
-        return f"Hola {self.alumno}, define dos variables, un entero igual a 1 y un stringcon la palabra 'hola'"
-    def cheek(self, codigo):
-        return codigo=="a=1 \n b='hola'"
+        return f"Hola {self.alumno}, Define 2 variables: a es un entero igual a 1 y b un string con la palabra 'hola'"
+
+    def check(self, codigo):
+        # Limpiamos espacios y saltos de línea
+        codigo_limpio = "".join(codigo.split())
+        codigo_esperado = "a=1b='hola'"
+        return codigo_limpio == codigo_esperado
     
 
 class Estadistica(Tarea):
@@ -37,3 +41,16 @@ class Estadistica(Tarea):
         valor_arg = localv.get("arg")
 
         return valor_arg == media_esperada
+    
+class Algebra(Tarea):
+    def leccion(self):
+        return f"Hola {self.alumno}, resuelve la ecuación 3*x - 6 = 0 y asigna el resultado a la variable 'x'"
+
+    def check(self, codigo):
+        localv = {}
+        globalv = {}
+        try:
+            exec(codigo, globalv, localv)
+        except Exception:
+            return False
+        return localv.get("x") == 2
