@@ -1,8 +1,10 @@
 # main.py
-from .leccion import IntroPython, Estadistica, Algebra
-from .tutor import Tarea, Evaluador
+from .leccion import IntroPython, Estadistica, Algebra, Geometria
+
+from .tutor import Evaluador
 
 def leer_codigo():
+    """Lee el código ingresado por el usuario línea por línea hasta una línea vacía"""
     codigo = ""
     while True:
         linea = input()
@@ -19,18 +21,22 @@ def prueba():
     tareas_ids = {
         "IntroPython": evaluacion.registrar(IntroPython),
         "Estadistica": evaluacion.registrar(Estadistica),
-        "Algebra": evaluacion.registrar(Algebra)
+        "Algebra": evaluacion.registrar(Algebra),
+        "Geometria": evaluacion.registrar(Geometria)
     }
 
     resultados = {}
+
+    # Inicializar diccionario de tareas por alumno
+    evaluacion.alumnos[alumno] = {}
 
     # Ejecutar cada lección
     for nombre, tarea_id in tareas_ids.items():
         evaluacion.iniciar_tarea(alumno, tarea_id)
         print(f"\nLección {nombre}")
-        print(evaluacion.obtener_leccion(alumno))
+        print(evaluacion.obtener_leccion(alumno, tarea_id))
         codigo = leer_codigo()
-        resultados[nombre] = evaluacion.check(alumno, codigo)
+        resultados[nombre] = evaluacion.check(alumno, tarea_id, codigo)
         print(f"Resultado: {resultados[nombre]}")
 
     # Resumen y reintentos
@@ -50,10 +56,11 @@ def prueba():
 
         leccion = input(f"Elige lección a reintentar {malas}: ").strip()
         if leccion in malas:
-            evaluacion.iniciar_tarea(alumno, tareas_ids[leccion])
-            print(evaluacion.obtener_leccion(alumno))
+            tarea_id = tareas_ids[leccion]
+            evaluacion.iniciar_tarea(alumno, tarea_id)
+            print(evaluacion.obtener_leccion(alumno, tarea_id))
             codigo = leer_codigo()
-            resultados[leccion] = evaluacion.check(alumno, codigo)
+            resultados[leccion] = evaluacion.check(alumno, tarea_id, codigo)
 
 if __name__ == "__main__":
     prueba()

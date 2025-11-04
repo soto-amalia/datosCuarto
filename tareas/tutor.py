@@ -1,8 +1,7 @@
-#--------------------------# tutor.py
 """
-Este archivo contiene la clase base abstracta Tarea y la clase Evaluador.
-- Tarea: define la interfaz para cualquier tarea, con métodos abstractos leccion() y check().
-- Evaluador: gestiona alumnos, tareas registradas, intentos, corrección y resumen de progreso.
+Este archivo contiene:
+- Tarea: clase abstracta base para cualquier tarea.
+- Evaluador: clase que gestiona alumnos, tareas registradas, intentos, corrección y resumen.
 """
 
 import abc
@@ -10,8 +9,7 @@ from abc import ABC, abstractmethod
 import uuid
 
 
-#-------------------------- Clase abstracta para tareas
-
+# -------------------------- Clase abstracta para tareas
 class Tarea(metaclass=abc.ABCMeta):
     @abstractmethod
     def leccion(self):
@@ -32,9 +30,7 @@ class Tarea(metaclass=abc.ABCMeta):
         raise NotImplemented
 
 
-# 
-#--------------------------Evaluador de tareas
-# 
+# -------------------------- Evaluador de tareas
 class Evaluador:
     """
     Gestiona alumnos y tareas.
@@ -43,7 +39,7 @@ class Evaluador:
     """
 
     def __init__(self):
-        self.alumnos = {}  # alumno -> instancia de tarea
+        self.alumnos = {}  # alumno -> {tarea_id: instancia de tarea}
         self.tareas = {}   # tarea_id -> clase de tarea
 
     def registrar(self, clase_tarea):
@@ -59,19 +55,21 @@ class Evaluador:
         ClaseTarea = self.tareas[tarea_id]
         instancia = ClaseTarea()
         instancia.alumno = alumno
-        # Inicializar contadores de intentos y correctos en la instancia
+        # Inicializar contadores
         instancia.intentos = 0
         instancia.correctos = 0
-        self.alumnos[alumno] = instancia
 
-    def obtener_leccion(self, alumno):
-        """Devuelve la lección/instrucciones de la tarea actual del alumno"""
-        tarea_inst = self.alumnos[alumno]
-        return tarea_inst.leccion()
+        if alumno not in self.alumnos:
+            self.alumnos[alumno] = {}
+        self.alumnos[alumno][tarea_id] = instancia
 
-    def check(self, alumno, codigo):
+    def obtener_leccion(self, alumno, tarea_id):
+        """Devuelve la lección/instrucciones de la tarea específica"""
+        return self.alumnos[alumno][tarea_id].leccion()
+
+    def check(self, alumno, tarea_id, codigo):
         """Evalúa el código entregado por el alumno y actualiza intentos y correctos"""
-        tarea_inst = self.alumnos[alumno]
+        tarea_inst = self.alumnos[alumno][tarea_id]
         tarea_inst.intentos += 1
         res = tarea_inst.check(codigo)
         if res:
@@ -79,12 +77,22 @@ class Evaluador:
         return res
 
     def resumen(self, alumno):
-        """Devuelve un resumen del progreso del alumno en su tarea actual"""
-        tarea_inst = self.alumnos.get(alumno)
-        if tarea_inst is None:
-            return f"No hay tarea iniciada para {alumno}"
-        intentos = getattr(tarea_inst, "intentos", 0)
-        correctos = getattr(tarea_inst, "correctos", 0)
-        aprobado = correctos > 0
-        return (f"Avance de {alumno} en la tarea {tarea_inst.__class__.__name__}, "
-                f"Intentos: {intentos}, Correctos: {correctos}, Aprobado? {aprobado}")
+        """
+        Genera resumen completo de todas las tareas del alumno,
+        indicando cuántas aprobó y porcentaje de éxito.
+        """
+        tareas_alumno = self.alumnos.get(alumno, {})
+        total = len(tareas_alumno)
+        correctas = 0
+        detalle = []
+
+        for tarea_id, tarea_inst in tareas_alumno.items():
+            aprobado = tarea_inst.correctos > 0
+            detalle.append(f"{tarea_inst.__class__.__name__}: {'Aprobado' if aprobado else 'No aprobado'}")
+            if aprobado:
+                correctas += 1
+
+        porcentaje = (correctas / total * 100) if total else 0
+        resumen_texto = "\n".join(detalle)
+        resumen_texto += f"\n{alumno} completó {correctas}/{total} lecciones correctamente ({porcentaje:.0f}%)"
+        return resumen_texto
