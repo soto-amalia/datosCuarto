@@ -7,7 +7,7 @@ import uuid # para crear id unicos
 # variables de Datos
 libros = [] # Una Lista. Guarda todos los libros como diccionarios.
 prestamos = [] # Lista que Guarda todos los préstamos (activos e históricos) como diccionarios.
-_prox_id = 1 # contador para asignar IDs únicos a los libros.
+#_prox_id = 1 # contador para asignar IDs únicos a los libros.
 
 def agregar_libro(titulo, autor, tipo, ejemplares=1):
     id_libro = str(uuid.uuid4())
@@ -21,7 +21,7 @@ def agregar_libro(titulo, autor, tipo, ejemplares=1):
     return titulo
 
     #diccionario --- nombre:ALondra
-
+agregar_libro("EL perrito feliz","Juenole Perezone","terror",4)
 print("Se creo correctamente la entrada del libro", agregar_libro("La comunidad del anillo", "Tolkien", "Fantasia"))
 """"
 
@@ -32,6 +32,11 @@ y un print de cada elemnto que quieras mostrar del libro actual;
 despues
 def prestar_libro(book_id, usuario, dias=14)
 uan funcion que diga que libro due agarrado pro que usuario y cuantos dias
-dentro de esa primerop valdiar si el libroe xiste
+dentro de esa primerop valdiar si el libro existe
 y si hya al menos una copia
 """""
+def listar_libros(LibrosInternos):
+    for libro in LibrosInternos:
+        print(libro.value("autor"))
+
+listar_libros(libros)
