@@ -37,6 +37,7 @@ y si hya al menos una copia
 """""
 def listar_libros(LibrosInternos):
     for libro in LibrosInternos:
-        print(libro.value("autor"))
+        print("-"*25)
+        print(libro["autor"]," # ", libro['titulo'])
 
 listar_libros(libros)
