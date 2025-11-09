@@ -1,5 +1,4 @@
-"""""
-Biblioteca Colibrí"""
+""""" Biblioteca Colibrí"""
 
 from datetime import datetime, timedelta #libreria para usar el timepo actual
 import uuid # para crear id unicos
@@ -36,8 +35,10 @@ dentro de esa primerop valdiar si el libro existe
 y si hya al menos una copia
 """""
 def listar_libros(LibrosInternos):
-    for libro in LibrosInternos:
+    for libro, i in enumerate(LibrosInternos, start=1):
         print("-"*25)
-        print(libro["autor"]," # ", libro['titulo'])
+        print(libro["autor"]," # ",i, libro['titulo'])
 
 listar_libros(libros)
+
+
