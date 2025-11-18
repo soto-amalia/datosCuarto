@@ -126,9 +126,10 @@ exp=re.compile(["h or H"]ola)
 exp=re.compile('[a-z]')
 exp=re.compile('[0-9]')
 exp=re.compile("[a-z, 0.9]")
-exp=re.compile('[-0,-9 a-z]')
+exp=re.compile('[-0-9 ,a-z]')
 """exppresion para encontrar cualquie rnumero exadem"""
 
+exp=re.compile('[0-9 a-fA-F]')
 
 
 
